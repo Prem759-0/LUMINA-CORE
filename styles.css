@@ -8,12 +8,10 @@ body {
     background-color: #020202;
     font-family: 'Courier New', Courier, monospace;
     color: #ffffff;
-    /* We hide overflow initially so the user can't scroll during the intro */
     overflow-y: hidden; 
     overflow-x: hidden;
 }
 
-/* 3D Canvas pinned to the background */
 #canvas-container {
     position: fixed;
     top: 0;
@@ -24,7 +22,7 @@ body {
     pointer-events: none;
 }
 
-/* The Cinematic Intro Overlay */
+/* --- SCENE 1: INTRO UI --- */
 .intro-layer {
     position: fixed;
     top: 0;
@@ -43,7 +41,6 @@ body {
     font-size: 1rem;
     letter-spacing: 0.5rem;
     color: #00ffcc;
-    text-transform: uppercase;
     position: absolute;
     bottom: 20vh;
 }
@@ -76,7 +73,7 @@ body {
     50% { transform: translateY(10px); }
 }
 
-/* Scrollable Layout */
+/* --- SCENE 2 & 3: SCROLL PANELS --- */
 .scroll-container {
     position: relative;
     z-index: 5;
@@ -91,15 +88,12 @@ body {
     padding: 10vw;
 }
 
-.empty {
-    /* Empty panels just to create scrolling space */
-    pointer-events: none; 
-}
-
+.empty { pointer-events: none; }
 .text-left { justify-content: flex-start; }
 .text-right { justify-content: flex-end; }
+.center-terminal { justify-content: center; } /* For Scene 3 */
 
-/* Holographic UI Cards */
+/* Hologram Cards */
 .hologram-card {
     background: rgba(0, 255, 204, 0.02);
     border: 1px solid rgba(0, 255, 204, 0.2);
@@ -116,11 +110,73 @@ body {
     font-size: 2.5rem;
     margin-bottom: 1rem;
     color: #ffffff;
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 .hologram-card p {
     font-size: 1.1rem;
     line-height: 1.6;
     color: #a0a0a0;
+}
+
+/* --- SCENE 3: TERMINAL UI --- */
+.terminal-window {
+    background: rgba(10, 10, 15, 0.8);
+    border: 1px solid rgba(255, 0, 255, 0.3);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    width: 600px;
+    border-radius: 8px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(255, 0, 255, 0.2);
+    overflow: hidden;
+}
+
+.terminal-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 0, 255, 0.3);
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.dot.red { background: #ff5f56; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #27c93f; }
+
+.terminal-header .title {
+    margin-left: 15px;
+    font-size: 0.8rem;
+    color: #a0a0a0;
+    letter-spacing: 1px;
+}
+
+.terminal-body {
+    padding: 30px;
+}
+
+.sys-msg {
+    color: #00ffcc;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.glitch-text {
+    font-family: sans-serif;
+    font-size: 2rem;
+    color: #ffffff;
+    margin: 20px 0;
+    text-shadow: 2px 0 #ff00ff, -2px 0 #00ffcc;
+}
+
+.blink {
+    animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+    50% { opacity: 0; }
 }
