@@ -12,6 +12,13 @@
 </head>
 <body>
 
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <div class="audio-toggle" id="audio-btn">
+        <span>SOUND [OFF]</span>
+    </div>
+
     <div id="canvas-container"></div>
 
     <div class="ui-layer intro-layer">
@@ -25,21 +32,21 @@
         <section class="panel empty"></section>
 
         <section class="panel text-left">
-            <div class="hologram-card">
+            <div class="hologram-card interactable">
                 <h2>QUANTUM DISASSEMBLY</h2>
                 <p>Breaking down the core reveals 15,000 localized energy nodes, spinning in a state of suspended animation.</p>
             </div>
         </section>
 
         <section class="panel text-right">
-            <div class="hologram-card">
+            <div class="hologram-card interactable">
                 <h2>EVENT HORIZON</h2>
                 <p>Restructuring the magnetic field condenses the nodes into a high-density processing pillar.</p>
             </div>
         </section>
 
         <section class="panel center-terminal">
-            <div class="terminal-window">
+            <div class="terminal-window interactable">
                 <div class="terminal-header">
                     <span class="dot red"></span>
                     <span class="dot yellow"></span>
@@ -58,7 +65,7 @@
         <section class="panel outro">
             <h1 class="glitch-final" data-text="WELCOME TO 2045">WELCOME TO 2045</h1>
             <p class="final-sub">THE FUTURE DOESN'T WAIT.</p>
-            <button class="restart-btn" onclick="window.scrollTo(0,0)">REBOOT SYSTEM</button>
+            <button class="restart-btn interactable" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">REBOOT SYSTEM</button>
         </section>
         
     </main>
