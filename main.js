@@ -1,115 +1,105 @@
-// Register GSAP ScrollTrigger
-gsap.registerPlugin(ScrollTrigger);
-
-// 1. THREE.JS SCENE SETUP
-const container = document.getElementById('canvas-container');
+// 1. SETUP THREE.JS SCENE
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-container.appendChild(renderer.domElement);
+document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-// 2. CREATE THE AETHER CORE (Particle Sphere)
+// 2. GENERATE THE "LUMINA" PARTICLE SPHERE
 const geometry = new THREE.BufferGeometry();
-const particlesCount = 5000;
-const posArray = new Float32Array(particlesCount * 3);
+const particlesCount = 10000;
+const positions = new Float32Array(particlesCount * 3);
+const colors = new Float32Array(particlesCount * 3);
 
-// Create a sphere of particles
-for(let i = 0; i < particlesCount * 3; i++) {
-    // Generate points on a sphere using math
-    const radius = 2;
-    const u = Math.random();
-    const v = Math.random();
-    const theta = u * 2.0 * Math.PI;
-    const phi = Math.acos(2.0 * v - 1.0);
-    const r = Math.cbrt(Math.random()) * radius;
+// Define colors (Neon Cyan to Electric Purple)
+const color1 = new THREE.Color(0x00ffcc);
+const color2 = new THREE.Color(0xff00ff);
 
-    const x = r * Math.sin(phi) * Math.cos(theta);
-    const y = r * Math.sin(phi) * Math.sin(theta);
-    const z = r * Math.cos(phi);
+for(let i = 0; i < particlesCount; i++) {
+    // Math to create a hollow sphere
+    const radius = 2 + Math.random() * 0.5;
+    const theta = Math.random() * 2 * Math.PI;
+    const phi = Math.acos(Math.random() * 2 - 1);
 
-    posArray[i] = x;
-    posArray[i+1] = y;
-    posArray[i+2] = z;
-    i += 2;
+    positions[i*3]     = radius * Math.sin(phi) * Math.cos(theta); // X
+    positions[i*3 + 1] = radius * Math.sin(phi) * Math.sin(theta); // Y
+    positions[i*3 + 2] = radius * Math.cos(phi);                   // Z
+
+    // Mix the two colors randomly for each particle
+    const mixedColor = color1.clone().lerp(color2, Math.random());
+    colors[i*3]     = mixedColor.r;
+    colors[i*3 + 1] = mixedColor.g;
+    colors[i*3 + 2] = mixedColor.b;
 }
 
-geometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-// Custom material for glowing particles
 const material = new THREE.PointsMaterial({
     size: 0.015,
-    color: 0x00f0ff,
+    vertexColors: true,
+    blending: THREE.AdditiveBlending,
     transparent: true,
-    opacity: 0.8,
-    blending: THREE.AdditiveBlending
+    opacity: 0.8
 });
 
-const particlesMesh = new THREE.Points(geometry, material);
-scene.add(particlesMesh);
+const particleMesh = new THREE.Points(geometry, material);
+particleMesh.scale.set(0.001, 0.001, 0.001); // Start invisible
+scene.add(particleMesh);
 
 camera.position.z = 5;
 
-// 3. ANIMATION LOOP (Constant rotation)
-const clock = new THREE.Clock();
-
+// 3. CONTINUOUS ROTATION LOOP
+let time = 0;
 function animate() {
     requestAnimationFrame(animate);
-    const elapsedTime = clock.getElapsedTime();
-
-    // Slow cinematic rotation
-    particlesMesh.rotation.y = elapsedTime * 0.05;
-    particlesMesh.rotation.x = elapsedTime * 0.02;
-
+    time += 0.002;
+    particleMesh.rotation.y = time;
+    particleMesh.rotation.z = time * 0.5;
     renderer.render(scene, camera);
 }
 animate();
 
-// 4. GSAP SCROLL ANIMATIONS (The "Cinematic" part)
+// 4. THE CINEMATIC TIMELINE (GSAP)
+const tl = gsap.timeline();
 
-// Scroll: Zoom into the core
-gsap.to(camera.position, {
-    z: 2,
+// Step A: Fake the system loading percentage (0 to 100)
+let progressObj = { value: 0 };
+tl.to(progressObj, {
+    value: 100,
+    duration: 2.5,
     ease: "power2.inOut",
-    scrollTrigger: {
-        trigger: ".feature-1",
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1 // Links animation directly to scrollbar
+    onUpdate: () => {
+        document.getElementById('progress').innerText = Math.round(progressObj.value) + "%";
     }
 });
 
-// Scroll: Change core color to Hyper-Magenta
-gsap.to(material.color, {
-    r: 1.0,  // Red
-    g: 0.0,  // Green
-    b: 0.5,  // Blue (Makes Pink/Magenta)
-    ease: "none",
-    scrollTrigger: {
-        trigger: ".feature-2",
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1
-    }
-});
+// Step B: The sphere rapidly expands from nothing
+tl.to(particleMesh.scale, {
+    x: 1, y: 1, z: 1,
+    duration: 2,
+    ease: "expo.out"
+}, "-=0.5"); // Starts slightly before the loading finishes
 
-// Scroll: Explode the particles outward at the end
-gsap.to(particlesMesh.scale, {
-    x: 5,
-    y: 5,
-    z: 5,
-    ease: "power3.in",
-    scrollTrigger: {
-        trigger: ".outro",
-        start: "top bottom",
-        end: "center center",
-        scrub: 1
-    }
-});
+// Step C: Loading text fades out, camera flies THROUGH the particles
+tl.to('.loader-text', { opacity: 0, duration: 0.5 }, "+=0.5");
+tl.to(camera.position, {
+    z: 0.1, // Pushes camera right into the center of the sphere
+    duration: 1.5,
+    ease: "power4.inOut"
+}, "-=0.2");
 
-// 5. RESPONSIVE RESIZING
+// Step D: The main title reveals itself with a massive scale effect
+tl.to('.main-title', {
+    opacity: 1,
+    scale: 1,
+    duration: 2,
+    ease: "back.out(1.5)"
+}, "-=0.5");
+
+// 5. HANDLE BROWSER RESIZING
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
