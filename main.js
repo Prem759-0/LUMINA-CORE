@@ -1,4 +1,3 @@
-// Register GSAP Plugin
 gsap.registerPlugin(ScrollTrigger);
 
 // 1. SETUP THREE.JS
@@ -9,18 +8,19 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-// 2. GENERATE PARTICLE SPHERE
+// 2. GENERATE PARTICLE CORE
 const geometry = new THREE.BufferGeometry();
 const particlesCount = 15000;
 const positions = new Float32Array(particlesCount * 3);
 const colors = new Float32Array(particlesCount * 3);
-const color1 = new THREE.Color(0x00ffcc);
-const color2 = new THREE.Color(0xff00ff);
+const color1 = new THREE.Color(0x00ffcc); // Neon Cyan
+const color2 = new THREE.Color(0xff00ff); // Electric Purple
 
 for(let i = 0; i < particlesCount; i++) {
     const radius = 2 + Math.random() * 0.5;
     const theta = Math.random() * 2 * Math.PI;
     const phi = Math.acos(Math.random() * 2 - 1);
+    
     positions[i*3]     = radius * Math.sin(phi) * Math.cos(theta);
     positions[i*3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
     positions[i*3 + 2] = radius * Math.cos(phi);
@@ -47,92 +47,95 @@ particleMesh.scale.set(0.001, 0.001, 0.001);
 scene.add(particleMesh);
 camera.position.z = 5;
 
-// 3. CONTINUOUS ROTATION
+// Variables for Mouse Parallax (Scene 3)
+let mouseX = 0;
+let mouseY = 0;
+let targetX = 0;
+let targetY = 0;
+const windowHalfX = window.innerWidth / 2;
+const windowHalfY = window.innerHeight / 2;
+
+document.addEventListener('mousemove', (event) => {
+    mouseX = (event.clientX - windowHalfX) * 0.002;
+    mouseY = (event.clientY - windowHalfY) * 0.002;
+});
+
+// 3. CONTINUOUS ROTATION & PARALLAX LOOP
 let time = 0;
 function animate() {
     requestAnimationFrame(animate);
     time += 0.002;
+    
+    // Constant rotation
     particleMesh.rotation.y = time;
     particleMesh.rotation.z = time * 0.5;
+
+    // Easing for smooth mouse parallax
+    targetX = mouseX * 2;
+    targetY = mouseY * 2;
+    camera.position.x += (targetX - camera.position.x) * 0.05;
+    camera.position.y += (-targetY - camera.position.y) * 0.05;
+
     renderer.render(scene, camera);
 }
 animate();
 
 // ==========================================
-// 4. THE CINEMATIC INTRO TIMELINE
+// 4. THE CINEMATIC INTRO TIMELINE (Scene 1)
 // ==========================================
 const introTl = gsap.timeline({
     onComplete: () => {
-        // UNLOCK SCROLLING WHEN INTRO IS DONE
-        document.body.style.overflowY = 'auto';
+        document.body.style.overflowY = 'auto'; // Unlock scroll
         gsap.to('.scroll-indicator', { opacity: 1, duration: 1 });
     }
 });
 
 let progressObj = { value: 0 };
 introTl.to(progressObj, {
-    value: 100,
-    duration: 2.5,
-    ease: "power2.inOut",
+    value: 100, duration: 2.5, ease: "power2.inOut",
     onUpdate: () => document.getElementById('progress').innerText = Math.round(progressObj.value) + "%"
 })
 .to(particleMesh.scale, { x: 1, y: 1, z: 1, duration: 2, ease: "expo.out" }, "-=0.5")
 .to('.loader-text', { opacity: 0, duration: 0.5 }, "+=0.5")
-.to(camera.position, { z: 0.1, duration: 1.5, ease: "power4.inOut" }, "-=0.2") // Camera flies inside
+.to(camera.position, { z: 0.1, duration: 1.5, ease: "power4.inOut" }, "-=0.2")
 .to('.main-title', { opacity: 1, scale: 1, duration: 2, ease: "back.out(1.5)" }, "-=0.5");
 
 
 // ==========================================
-// 5. THE SCROLL-TRIGGERED EXPLOSION
+// 5. SCROLL TRIGGER ANIMATIONS (Scene 2 & 3)
 // ==========================================
 
-// Scroll Event 1: Pull camera back & stretch particles into a galaxy ring
-gsap.to(camera.position, {
-    z: 8, // Pull camera way back out
-    ease: "power2.inOut",
-    scrollTrigger: {
-        trigger: ".text-left", // Triggers when first text panel comes into view
-        start: "top bottom",
-        end: "center center",
-        scrub: 1 // Makes animation tie perfectly to the scroll wheel
-    }
-});
-
-gsap.to(particleMesh.scale, {
-    x: 4, 
-    y: 0.2, // Flattens it like a disc/galaxy
-    z: 4,
-    ease: "none",
-    scrollTrigger: {
-        trigger: ".text-left",
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1
-    }
-});
-
-// Scroll Event 2: Title fades out as you start scrolling
+// Fade out title
 gsap.to('.intro-layer', {
     opacity: 0,
-    scrollTrigger: {
-        trigger: ".text-left",
-        start: "top bottom",
-        end: "top center",
-        scrub: true
-    }
+    scrollTrigger: { trigger: ".text-left", start: "top bottom", end: "top center", scrub: true }
 });
 
-// Scroll Event 3: Compress into a dense column, change color bias to purple
+// Scene 2.1: Pull back & Flatten into Galaxy
+gsap.to(camera.position, {
+    z: 8, ease: "power2.inOut",
+    scrollTrigger: { trigger: ".text-left", start: "top bottom", end: "center center", scrub: 1 }
+});
 gsap.to(particleMesh.scale, {
-    x: 0.5, 
-    y: 10, // Stretches it vertically
-    z: 0.5,
-    ease: "power2.inOut",
-    scrollTrigger: {
-        trigger: ".text-right",
-        start: "top bottom",
-        end: "center center",
-        scrub: 1
+    x: 4, y: 0.2, z: 4, ease: "none",
+    scrollTrigger: { trigger: ".text-left", start: "top bottom", end: "bottom top", scrub: 1 }
+});
+
+// Scene 2.2: Compress into Vertical Pillar
+gsap.to(particleMesh.scale, {
+    x: 0.5, y: 10, z: 0.5, ease: "power2.inOut",
+    scrollTrigger: { trigger: ".text-right", start: "top bottom", end: "center center", scrub: 1 }
+});
+
+// Scene 3: THE CORE DIVE (Push camera INSIDE the pillar)
+gsap.to(camera.position, {
+    z: -2, // Pushes the camera deep into the center of the 3D geometry
+    ease: "power3.inOut",
+    scrollTrigger: { 
+        trigger: ".center-terminal", 
+        start: "top bottom", 
+        end: "center center", 
+        scrub: 1 
     }
 });
 
