@@ -6,59 +6,121 @@
 
 body {
     background-color: #020202;
-    overflow: hidden; /* No scrolling during the cinematic intro */
     font-family: 'Courier New', Courier, monospace;
     color: #ffffff;
+    /* We hide overflow initially so the user can't scroll during the intro */
+    overflow-y: hidden; 
+    overflow-x: hidden;
 }
 
+/* 3D Canvas pinned to the background */
 #canvas-container {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 1;
+    z-index: 0;
+    pointer-events: none;
 }
 
-/* UI Positioning */
-.ui-layer {
-    position: relative;
-    z-index: 2;
+/* The Cinematic Intro Overlay */
+.intro-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
+    z-index: 10;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    pointer-events: none; /* Allows clicks to pass through to the 3D scene */
+    pointer-events: none;
 }
 
-/* The Boot Sequence Text */
 .loader-text {
     font-size: 1rem;
     letter-spacing: 0.5rem;
-    color: #00ffcc; /* Neon Cyan */
+    color: #00ffcc;
     text-transform: uppercase;
     position: absolute;
-    bottom: 15vh;
+    bottom: 20vh;
 }
 
-#progress {
-    font-weight: bold;
-    color: #fff;
-}
-
-/* The Final Reveal Title */
 .main-title {
     font-family: sans-serif;
     font-size: 8vw;
     font-weight: 900;
     letter-spacing: 1.5rem;
-    margin-right: -1.5rem; /* Fixes centering offset caused by letter-spacing */
+    margin-right: -1.5rem;
     background: linear-gradient(180deg, #ffffff 0%, #a0a0a0 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    opacity: 0; /* Hidden by default */
+    opacity: 0;
     transform: scale(0.8);
     text-shadow: 0 0 40px rgba(0, 255, 204, 0.3);
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 5vh;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    opacity: 0;
+    animation: bounce 2s infinite ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(10px); }
+}
+
+/* Scrollable Layout */
+.scroll-container {
+    position: relative;
+    z-index: 5;
+    width: 100vw;
+}
+
+.panel {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 10vw;
+}
+
+.empty {
+    /* Empty panels just to create scrolling space */
+    pointer-events: none; 
+}
+
+.text-left { justify-content: flex-start; }
+.text-right { justify-content: flex-end; }
+
+/* Holographic UI Cards */
+.hologram-card {
+    background: rgba(0, 255, 204, 0.02);
+    border: 1px solid rgba(0, 255, 204, 0.2);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 3rem;
+    max-width: 500px;
+    border-left: 4px solid #00ffcc;
+    box-shadow: 0 0 30px rgba(0, 255, 204, 0.05);
+}
+
+.hologram-card h2 {
+    font-family: sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #ffffff;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.hologram-card p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #a0a0a0;
 }
