@@ -1,0 +1,115 @@
+/* Base Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #030305;
+    color: #ffffff;
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+    overscroll-behavior: none;
+}
+
+/* 3D Canvas Background */
+#canvas-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 0; /* Stays behind everything */
+    pointer-events: none; /* Let clicks pass through */
+}
+
+/* UI Overlay */
+main {
+    position: relative;
+    z-index: 1;
+}
+
+.scene {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10vw;
+    position: relative;
+}
+
+/* Typography & Animations */
+h1 {
+    font-size: 8vw;
+    font-weight: 700;
+    letter-spacing: -0.05em;
+    line-height: 1;
+    background: linear-gradient(90deg, #fff, #5e5e73);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+    font-size: 1.5vw;
+    margin-top: 20px;
+    color: #a0a0b8;
+    font-weight: 300;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 50px;
+    left: 10vw;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    opacity: 0.5;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; transform: translateY(0); }
+    50% { opacity: 1; transform: translateY(10px); }
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 500px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.glass-card h2 {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #00f0ff; /* Neon Cyan */
+}
+
+.glass-card p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #cccccc;
+}
+
+.right {
+    align-self: flex-end;
+}
+
+/* Outro */
+.outro {
+    align-items: center;
+    text-align: center;
+}
+
+.glow-text {
+    background: linear-gradient(90deg, #ff007f, #7000ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 40px rgba(255, 0, 127, 0.5);
+}
