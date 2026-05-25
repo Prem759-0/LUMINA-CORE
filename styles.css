@@ -1,8 +1,4 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
     background-color: #020202;
@@ -13,170 +9,88 @@ body {
 }
 
 #canvas-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 0;
-    pointer-events: none;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;
 }
 
-/* --- SCENE 1: INTRO UI --- */
+/* --- SCENE 1: INTRO --- */
 .intro-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10;
+    display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;
 }
-
-.loader-text {
-    font-size: 1rem;
-    letter-spacing: 0.5rem;
-    color: #00ffcc;
-    position: absolute;
-    bottom: 20vh;
-}
-
+.loader-text { font-size: 1rem; letter-spacing: 0.5rem; color: #00ffcc; position: absolute; bottom: 20vh; }
 .main-title {
-    font-family: sans-serif;
-    font-size: 8vw;
-    font-weight: 900;
-    letter-spacing: 1.5rem;
-    margin-right: -1.5rem;
-    background: linear-gradient(180deg, #ffffff 0%, #a0a0a0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    opacity: 0;
-    transform: scale(0.8);
-    text-shadow: 0 0 40px rgba(0, 255, 204, 0.3);
+    font-family: sans-serif; font-size: 8vw; font-weight: 900; letter-spacing: 1.5rem; margin-right: -1.5rem;
+    background: linear-gradient(180deg, #ffffff 0%, #a0a0a0 100%); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; opacity: 0; transform: scale(0.8); text-shadow: 0 0 40px rgba(0, 255, 204, 0.3);
 }
-
 .scroll-indicator {
-    position: absolute;
-    bottom: 5vh;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    opacity: 0;
-    animation: bounce 2s infinite ease-in-out;
+    position: absolute; bottom: 5vh; font-size: 0.8rem; letter-spacing: 2px; opacity: 0; animation: bounce 2s infinite ease-in-out;
 }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
 
-@keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(10px); }
-}
-
-/* --- SCENE 2 & 3: SCROLL PANELS --- */
-.scroll-container {
-    position: relative;
-    z-index: 5;
-    width: 100vw;
-}
-
-.panel {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 10vw;
-}
-
+/* --- SCROLL PANELS --- */
+.scroll-container { position: relative; z-index: 5; width: 100vw; }
+.panel { width: 100vw; height: 100vh; display: flex; align-items: center; padding: 10vw; }
 .empty { pointer-events: none; }
 .text-left { justify-content: flex-start; }
 .text-right { justify-content: flex-end; }
-.center-terminal { justify-content: center; } /* For Scene 3 */
+.center-terminal { justify-content: center; } 
+.outro { justify-content: center; flex-direction: column; text-align: center; }
 
-/* Hologram Cards */
 .hologram-card {
-    background: rgba(0, 255, 204, 0.02);
-    border: 1px solid rgba(0, 255, 204, 0.2);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    padding: 3rem;
-    max-width: 500px;
-    border-left: 4px solid #00ffcc;
-    box-shadow: 0 0 30px rgba(0, 255, 204, 0.05);
+    background: rgba(0, 255, 204, 0.02); border: 1px solid rgba(0, 255, 204, 0.2);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 3rem; max-width: 500px;
+    border-left: 4px solid #00ffcc; box-shadow: 0 0 30px rgba(0, 255, 204, 0.05);
 }
+.hologram-card h2 { font-family: sans-serif; font-size: 2.5rem; margin-bottom: 1rem; color: #ffffff; }
+.hologram-card p { font-size: 1.1rem; line-height: 1.6; color: #a0a0a0; }
 
-.hologram-card h2 {
-    font-family: sans-serif;
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    color: #ffffff;
-}
-
-.hologram-card p {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    color: #a0a0a0;
-}
-
-/* --- SCENE 3: TERMINAL UI --- */
+/* --- SCENE 3: TERMINAL --- */
 .terminal-window {
-    background: rgba(10, 10, 15, 0.8);
-    border: 1px solid rgba(255, 0, 255, 0.3);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    width: 600px;
-    border-radius: 8px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(255, 0, 255, 0.2);
-    overflow: hidden;
+    background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255, 0, 255, 0.3);
+    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); width: 600px;
+    border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(255, 0, 255, 0.2); overflow: hidden;
 }
+.terminal-header { background: rgba(255, 255, 255, 0.05); padding: 10px 15px; display: flex; align-items: center; border-bottom: 1px solid rgba(255, 0, 255, 0.3); }
+.dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
+.dot.red { background: #ff5f56; } .dot.yellow { background: #ffbd2e; } .dot.green { background: #27c93f; }
+.terminal-header .title { margin-left: 15px; font-size: 0.8rem; color: #a0a0a0; letter-spacing: 1px; }
+.terminal-body { padding: 30px; }
+.sys-msg { color: #00ffcc; margin-bottom: 10px; font-size: 1rem; }
+.glitch-text-small { font-family: sans-serif; font-size: 2rem; color: #ffffff; margin: 20px 0; text-shadow: 2px 0 #ff00ff, -2px 0 #00ffcc; }
+.blink { animation: blinker 1s linear infinite; }
+@keyframes blinker { 50% { opacity: 0; } }
 
-.terminal-header {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 10px 15px;
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid rgba(255, 0, 255, 0.3);
-}
-
-.dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 8px;
-}
-.dot.red { background: #ff5f56; }
-.dot.yellow { background: #ffbd2e; }
-.dot.green { background: #27c93f; }
-
-.terminal-header .title {
-    margin-left: 15px;
-    font-size: 0.8rem;
-    color: #a0a0a0;
-    letter-spacing: 1px;
-}
-
-.terminal-body {
-    padding: 30px;
-}
-
-.sys-msg {
-    color: #00ffcc;
-    margin-bottom: 10px;
-    font-size: 1rem;
-}
-
-.glitch-text {
+/* --- SCENE 4: OUTRO --- */
+.glitch-final {
     font-family: sans-serif;
-    font-size: 2rem;
+    font-size: 6vw;
+    font-weight: 900;
     color: #ffffff;
-    margin: 20px 0;
-    text-shadow: 2px 0 #ff00ff, -2px 0 #00ffcc;
+    letter-spacing: 0.5rem;
+    text-shadow: 0 0 30px rgba(255, 0, 255, 0.8), 0 0 60px rgba(0, 255, 204, 0.5);
+    margin-bottom: 1rem;
 }
-
-.blink {
-    animation: blinker 1s linear infinite;
+.final-sub {
+    font-size: 1.5rem;
+    letter-spacing: 8px;
+    color: #00ffcc;
+    margin-bottom: 3rem;
 }
-
-@keyframes blinker {
-    50% { opacity: 0; }
+.restart-btn {
+    background: transparent;
+    color: #ffffff;
+    border: 1px solid #ff00ff;
+    padding: 15px 40px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
+    pointer-events: auto; /* Re-enable clicks */
+}
+.restart-btn:hover {
+    background: rgba(255, 0, 255, 0.2);
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
 }
