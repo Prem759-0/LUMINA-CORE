@@ -1,96 +1,74 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* ==========================================
+   THE AWWWARDS POLISH (Cursor & Audio UI)
+========================================== */
 
+/* Hide default cursor globally */
 body {
-    background-color: #020202;
-    font-family: 'Courier New', Courier, monospace;
-    color: #ffffff;
-    overflow-y: hidden; 
-    overflow-x: hidden;
+    cursor: none;
 }
 
-#canvas-container {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;
+/* Base styling for the custom cursor */
+.cursor, .cursor-follower {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none; /* Crucial: lets you click through the cursor */
+    z-index: 9999;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
 }
 
-/* --- SCENE 1: INTRO --- */
-.intro-layer {
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10;
-    display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;
+/* The solid dot */
+.cursor {
+    width: 6px;
+    height: 6px;
+    background: #00ffcc;
 }
-.loader-text { font-size: 1rem; letter-spacing: 0.5rem; color: #00ffcc; position: absolute; bottom: 20vh; }
-.main-title {
-    font-family: sans-serif; font-size: 8vw; font-weight: 900; letter-spacing: 1.5rem; margin-right: -1.5rem;
-    background: linear-gradient(180deg, #ffffff 0%, #a0a0a0 100%); -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; opacity: 0; transform: scale(0.8); text-shadow: 0 0 40px rgba(0, 255, 204, 0.3);
-}
-.scroll-indicator {
-    position: absolute; bottom: 5vh; font-size: 0.8rem; letter-spacing: 2px; opacity: 0; animation: bounce 2s infinite ease-in-out;
-}
-@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(10px); } }
 
-/* --- SCROLL PANELS --- */
-.scroll-container { position: relative; z-index: 5; width: 100vw; }
-.panel { width: 100vw; height: 100vh; display: flex; align-items: center; padding: 10vw; }
-.empty { pointer-events: none; }
-.text-left { justify-content: flex-start; }
-.text-right { justify-content: flex-end; }
-.center-terminal { justify-content: center; } 
-.outro { justify-content: center; flex-direction: column; text-align: center; }
+/* The trailing ring */
+.cursor-follower {
+    width: 40px;
+    height: 40px;
+    border: 1px solid rgba(0, 255, 204, 0.4);
+    transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
+}
 
-.hologram-card {
-    background: rgba(0, 255, 204, 0.02); border: 1px solid rgba(0, 255, 204, 0.2);
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 3rem; max-width: 500px;
-    border-left: 4px solid #00ffcc; box-shadow: 0 0 30px rgba(0, 255, 204, 0.05);
+/* Hover state when over cards or buttons */
+body.cursor-active .cursor-follower {
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 0, 255, 0.1);
+    border-color: #ff00ff;
 }
-.hologram-card h2 { font-family: sans-serif; font-size: 2.5rem; margin-bottom: 1rem; color: #ffffff; }
-.hologram-card p { font-size: 1.1rem; line-height: 1.6; color: #a0a0a0; }
 
-/* --- SCENE 3: TERMINAL --- */
-.terminal-window {
-    background: rgba(10, 10, 15, 0.8); border: 1px solid rgba(255, 0, 255, 0.3);
-    backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); width: 600px;
-    border-radius: 8px; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(255, 0, 255, 0.2); overflow: hidden;
+body.cursor-active .cursor {
+    display: none; /* Hide the dot when hovering over something clickable */
 }
-.terminal-header { background: rgba(255, 255, 255, 0.05); padding: 10px 15px; display: flex; align-items: center; border-bottom: 1px solid rgba(255, 0, 255, 0.3); }
-.dot { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
-.dot.red { background: #ff5f56; } .dot.yellow { background: #ffbd2e; } .dot.green { background: #27c93f; }
-.terminal-header .title { margin-left: 15px; font-size: 0.8rem; color: #a0a0a0; letter-spacing: 1px; }
-.terminal-body { padding: 30px; }
-.sys-msg { color: #00ffcc; margin-bottom: 10px; font-size: 1rem; }
-.glitch-text-small { font-family: sans-serif; font-size: 2rem; color: #ffffff; margin: 20px 0; text-shadow: 2px 0 #ff00ff, -2px 0 #00ffcc; }
-.blink { animation: blinker 1s linear infinite; }
-@keyframes blinker { 50% { opacity: 0; } }
 
-/* --- SCENE 4: OUTRO --- */
-.glitch-final {
-    font-family: sans-serif;
-    font-size: 6vw;
-    font-weight: 900;
-    color: #ffffff;
-    letter-spacing: 0.5rem;
-    text-shadow: 0 0 30px rgba(255, 0, 255, 0.8), 0 0 60px rgba(0, 255, 204, 0.5);
-    margin-bottom: 1rem;
-}
-.final-sub {
-    font-size: 1.5rem;
-    letter-spacing: 8px;
-    color: #00ffcc;
-    margin-bottom: 3rem;
-}
-.restart-btn {
-    background: transparent;
-    color: #ffffff;
-    border: 1px solid #ff00ff;
-    padding: 15px 40px;
-    font-family: 'Courier New', Courier, monospace;
-    font-size: 1.2rem;
+/* Audio Button Top Right */
+.audio-toggle {
+    position: fixed;
+    top: 40px;
+    right: 40px;
+    z-index: 100;
+    font-size: 0.8rem;
     letter-spacing: 2px;
-    cursor: pointer;
+    color: #a0a0a0;
+    padding: 10px 15px;
+    border: 1px solid rgba(160, 160, 160, 0.3);
+    border-radius: 4px;
     transition: 0.3s ease;
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.2);
-    pointer-events: auto; /* Re-enable clicks */
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
 }
-.restart-btn:hover {
-    background: rgba(255, 0, 255, 0.2);
-    box-shadow: 0 0 30px rgba(255, 0, 255, 0.6);
+
+/* Make sure we can click the audio button even though body cursor is none */
+.audio-toggle, button {
+    cursor: none; 
+}
+
+.audio-toggle:hover {
+    color: #00ffcc;
+    border-color: #00ffcc;
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
 }
